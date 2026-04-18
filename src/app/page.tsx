@@ -20,7 +20,7 @@ export default function Home() {
       if (exists) {
         return prev.filter(s => s.symbol !== element.symbol)
       }
-      if (prev.length >= 3) return prev
+      if (prev.length >= 6) return prev
       return [...prev, { symbol: element.symbol, quantity: 1 }]
     })
   }, [])
@@ -103,7 +103,7 @@ export default function Home() {
         {/* Periodic table */}
         <section>
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">
-            주기율표 — 원소를 클릭해서 선택 (최대 3개)
+            주기율표 — 원소를 클릭해서 선택 (최대 6종)
           </h2>
           <PeriodicTable selected={selected} onSelect={handleSelect} />
         </section>

@@ -19,7 +19,7 @@ export default function PeriodicTable({ selected, onSelect }: Props) {
   const actinides = ELEMENTS.filter(e => e.category === 'actinide').sort((a, b) => a.number - b.number)
 
   const isSelected = (symbol: string) => selected.some(s => s.symbol === symbol)
-  const canSelect = (symbol: string) => selected.length < 3 || isSelected(symbol)
+  const canSelect = (symbol: string) => selected.length < 6 || isSelected(symbol)
 
   const getCellStyle = (element: Element) => {
     const sel = isSelected(element.symbol)

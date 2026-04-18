@@ -37,9 +37,19 @@ export default function SelectedPanel({ selected, onQuantityChange, onRemove, on
                     onClick={() => quantity > 1 && onQuantityChange(symbol, quantity - 1)}
                     className="w-6 h-6 rounded-full bg-gray-700 hover:bg-gray-600 text-white text-sm font-bold flex items-center justify-center transition-colors"
                   >−</button>
-                  <span className="text-white text-sm font-mono w-4 text-center">{quantity}</span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={99}
+                    value={quantity}
+                    onChange={e => {
+                      const v = Math.min(99, Math.max(1, parseInt(e.target.value) || 1))
+                      onQuantityChange(symbol, v)
+                    }}
+                    className="text-white text-sm font-mono w-8 text-center bg-transparent border-b border-gray-600 focus:outline-none focus:border-violet-400"
+                  />
                   <button
-                    onClick={() => quantity < 9 && onQuantityChange(symbol, quantity + 1)}
+                    onClick={() => quantity < 99 && onQuantityChange(symbol, quantity + 1)}
                     className="w-6 h-6 rounded-full bg-gray-700 hover:bg-gray-600 text-white text-sm font-bold flex items-center justify-center transition-colors"
                   >+</button>
                 </div>
