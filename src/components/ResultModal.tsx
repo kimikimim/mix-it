@@ -77,13 +77,18 @@ export default function ResultModal({ reaction, noMatch, onClose }: Props) {
                 {meta?.icon}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
                   <span
                     className="text-xs px-2 py-0.5 rounded-full font-medium"
                     style={{ backgroundColor: reaction.color + '33', color: reaction.color }}
                   >
                     {meta?.label}
                   </span>
+                  {reaction.is_pubchem && (
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-blue-900/50 text-blue-300 font-medium">
+                      PubChem
+                    </span>
+                  )}
                 </div>
                 <h2 className="text-white text-2xl font-black">{reaction.product_formula}</h2>
                 <p className="text-gray-300 text-base font-medium">{reaction.product_name}</p>

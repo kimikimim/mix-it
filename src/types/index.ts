@@ -11,6 +11,7 @@ export interface Reaction {
   animation: AnimationType
   color: string
   secondary_color?: string
+  is_pubchem?: boolean
 }
 
 export interface SelectedElement {

@@ -5,6 +5,7 @@ import PeriodicTable from '@/components/PeriodicTable'
 import SelectedPanel from '@/components/SelectedPanel'
 import ResultModal from '@/components/ResultModal'
 import { supabase } from '@/lib/supabase'
+import { buildHillFormula, inferReactionType, inferAnimation, inferColor } from '@/lib/inferReaction'
 import { Element, SelectedElement, Reaction } from '@/types'
 
 export default function Home() {
@@ -17,9 +18,7 @@ export default function Home() {
   const handleSelect = useCallback((element: Element) => {
     setSelected(prev => {
       const exists = prev.find(s => s.symbol === element.symbol)
-      if (exists) {
-        return prev.filter(s => s.symbol !== element.symbol)
-      }
+      if (exists) return prev.filter(s => s.symbol !== element.symbol)
       if (prev.length >= 6) return prev
       return [...prev, { symbol: element.symbol, quantity: 1 }]
     })
@@ -42,7 +41,7 @@ export default function Home() {
     try {
       const symbols = selected.map(s => s.symbol).sort()
 
-      // Fetch all reactions containing any of the selected elements
+      // ── 1단계: 로컬 Supabase DB 조회 ──────────────────
       const { data } = await supabase
         .from('reactions')
         .select('*')
@@ -57,14 +56,38 @@ export default function Home() {
           r.elements.length === symbols.length &&
           r.elements.every((e: string) => symbolsSet.has(e))
         )
-
         if (candidates.length > 0) {
-          // Try to match ratios exactly
-          const ratioMatch = candidates.find((r: Reaction) => {
-            const selMap = Object.fromEntries(selected.map(s => [s.symbol, s.quantity]))
-            return r.elements.every((e: string, i: number) => r.ratios[i] === selMap[e])
-          })
+          const selMap = Object.fromEntries(selected.map(s => [s.symbol, s.quantity]))
+          const ratioMatch = candidates.find((r: Reaction) =>
+            r.elements.every((e: string, i: number) => r.ratios[i] === selMap[e])
+          )
           found = ratioMatch || candidates[0]
+        }
+      }
+
+      // ── 2단계: PubChem API fallback ────────────────────
+      if (!found) {
+        const formula = buildHillFormula(selected)
+        try {
+          const res = await fetch(`/api/pubchem?formula=${encodeURIComponent(formula)}`)
+          const pubchem = await res.json()
+
+          if (pubchem?.formula) {
+            const reactionType = inferReactionType(symbols, selected.map(s => s.quantity))
+            found = {
+              id: `pubchem-${pubchem.cid}`,
+              elements: symbols,
+              ratios: selected.map(s => s.quantity),
+              product_formula: pubchem.formula,
+              product_name: pubchem.common_name || pubchem.iupac_name,
+              reaction_type: reactionType,
+              animation: inferAnimation(reactionType),
+              color: inferColor(symbols, selected.map(s => s.quantity)),
+              is_pubchem: true,
+            } as Reaction
+          }
+        } catch {
+          // PubChem 실패 시 조용히 무시
         }
       }
 
@@ -81,7 +104,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gray-950 text-white">
-      {/* Header */}
       <header className="border-b border-gray-800 px-6 py-4 flex items-center gap-3">
         <div className="text-2xl font-black tracking-tight">
           <span className="text-violet-400">mix</span>
@@ -91,7 +113,6 @@ export default function Home() {
       </header>
 
       <div className="max-w-screen-2xl mx-auto px-4 py-6 flex flex-col gap-6">
-        {/* Selected panel */}
         <SelectedPanel
           selected={selected}
           onQuantityChange={handleQuantityChange}
@@ -99,8 +120,6 @@ export default function Home() {
           onMix={handleMix}
           loading={loading}
         />
-
-        {/* Periodic table */}
         <section>
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">
             주기율표 — 원소를 클릭해서 선택 (최대 6종)
@@ -109,7 +128,6 @@ export default function Home() {
         </section>
       </div>
 
-      {/* Result modal */}
       {showModal && (
         <ResultModal
           reaction={reaction}
