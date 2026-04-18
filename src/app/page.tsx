@@ -99,14 +99,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gray-950 text-white">
-      <header className="border-b border-gray-800 px-6 py-4 flex items-center gap-3">
-        <div className="text-2xl font-black tracking-tight">
-          <span className="text-violet-400">mix</span>
-          <span className="text-fuchsia-400">.it</span>
-        </div>
-        <span className="text-gray-500 text-sm">원소를 섞어보세요 ⚗️</span>
-      </header>
-
       <div className="max-w-screen-2xl mx-auto px-4 py-6 flex flex-col gap-6">
         <SelectedPanel
           selected={selected}
