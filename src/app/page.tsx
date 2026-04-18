@@ -4,9 +4,28 @@ import { useState, useCallback } from 'react'
 import PeriodicTable from '@/components/PeriodicTable'
 import SelectedPanel from '@/components/SelectedPanel'
 import ResultModal from '@/components/ResultModal'
-import { supabase } from '@/lib/supabase'
+import { REACTIONS } from '@/lib/reactionsData'
 import { buildHillFormula, inferReactionType, inferAnimation, inferColor } from '@/lib/inferReaction'
 import { Element, SelectedElement, Reaction } from '@/types'
+
+function findLocalReaction(selected: SelectedElement[]): Reaction | null {
+  const symbols = selected.map(s => s.symbol).sort()
+  const symbolsSet = new Set(symbols)
+  const selMap = Object.fromEntries(selected.map(s => [s.symbol, s.quantity]))
+
+  const candidates = REACTIONS.filter(r =>
+    r.elements.length === symbols.length &&
+    r.elements.every(e => symbolsSet.has(e))
+  )
+
+  if (!candidates.length) return null
+
+  const ratioMatch = candidates.find(r =>
+    r.elements.every((e, i) => r.ratios[i] === selMap[e])
+  )
+  const found = ratioMatch || candidates[0]
+  return { ...found, id: found.product_formula }
+}
 
 export default function Home() {
   const [selected, setSelected] = useState<SelectedElement[]>([])
@@ -39,33 +58,10 @@ export default function Home() {
     setNoMatch(false)
 
     try {
-      const symbols = selected.map(s => s.symbol).sort()
+      // ── 1단계: 로컬 데이터 조회 ──────────────────────
+      let found: Reaction | null = findLocalReaction(selected)
 
-      // ── 1단계: 로컬 Supabase DB 조회 ──────────────────
-      const { data } = await supabase
-        .from('reactions')
-        .select('*')
-        .contains('elements', symbols)
-        .containedBy('elements', symbols)
-
-      let found: Reaction | null = null
-
-      if (data && data.length > 0) {
-        const symbolsSet = new Set(symbols)
-        const candidates = data.filter((r: Reaction) =>
-          r.elements.length === symbols.length &&
-          r.elements.every((e: string) => symbolsSet.has(e))
-        )
-        if (candidates.length > 0) {
-          const selMap = Object.fromEntries(selected.map(s => [s.symbol, s.quantity]))
-          const ratioMatch = candidates.find((r: Reaction) =>
-            r.elements.every((e: string, i: number) => r.ratios[i] === selMap[e])
-          )
-          found = ratioMatch || candidates[0]
-        }
-      }
-
-      // ── 2단계: PubChem API fallback ────────────────────
+      // ── 2단계: PubChem API fallback ──────────────────
       if (!found) {
         const formula = buildHillFormula(selected)
         try {
@@ -73,29 +69,28 @@ export default function Home() {
           const pubchem = await res.json()
 
           if (pubchem?.formula) {
-            const reactionType = inferReactionType(symbols, selected.map(s => s.quantity))
+            const symbols = selected.map(s => s.symbol)
+            const ratios = selected.map(s => s.quantity)
+            const reactionType = inferReactionType(symbols, ratios)
             found = {
               id: `pubchem-${pubchem.cid}`,
               elements: symbols,
-              ratios: selected.map(s => s.quantity),
+              ratios,
               product_formula: pubchem.formula,
               product_name: pubchem.common_name || pubchem.iupac_name,
               reaction_type: reactionType,
               animation: inferAnimation(reactionType),
-              color: inferColor(symbols, selected.map(s => s.quantity)),
+              color: inferColor(symbols, ratios),
               is_pubchem: true,
-            } as Reaction
+            }
           }
         } catch {
           // PubChem 실패 시 조용히 무시
         }
       }
 
-      if (found) {
-        setReaction(found)
-      } else {
-        setNoMatch(true)
-      }
+      if (found) setReaction(found)
+      else setNoMatch(true)
       setShowModal(true)
     } finally {
       setLoading(false)
