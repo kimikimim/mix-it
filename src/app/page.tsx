@@ -109,7 +109,7 @@ export default function Home() {
         />
         <section>
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">
-            주기율표 — 원소를 클릭해서 선택 (최대 6종)
+            Periodic Table — Click elements to select (max 6 types)
           </h2>
           <PeriodicTable selected={selected} onSelect={handleSelect} />
         </section>

@@ -22,30 +22,30 @@ interface Props {
   onClose: () => void
 }
 
-// 카테고리별 애니메이션 색상 및 타입
+// Category-based animation color and type
 function getCookingStyle(category: string, area: string): { color: string; emoji: string; label: string } {
   const c = (category + area).toLowerCase()
   if (c.includes('dessert') || c.includes('cake') || c.includes('sweet'))
-    return { color: '#FF69B4', emoji: '🍰', label: '디저트' }
+    return { color: '#FF69B4', emoji: '🍰', label: 'Dessert' }
   if (c.includes('seafood') || c.includes('fish') || c.includes('japanese') || c.includes('korean'))
-    return { color: '#4169E1', emoji: '🐟', label: '해산물' }
+    return { color: '#4169E1', emoji: '🐟', label: 'Seafood' }
   if (c.includes('italian') || c.includes('pasta'))
-    return { color: '#DAA520', emoji: '🍝', label: '파스타' }
+    return { color: '#DAA520', emoji: '🍝', label: 'Pasta' }
   if (c.includes('soup') || c.includes('stew'))
-    return { color: '#8B4513', emoji: '🍲', label: '수프/스튜' }
+    return { color: '#8B4513', emoji: '🍲', label: 'Soup / Stew' }
   if (c.includes('salad') || c.includes('vegetarian') || c.includes('vegan'))
-    return { color: '#228B22', emoji: '🥗', label: '샐러드' }
+    return { color: '#228B22', emoji: '🥗', label: 'Salad' }
   if (c.includes('beef') || c.includes('lamb') || c.includes('pork'))
-    return { color: '#8B2500', emoji: '🥩', label: '육류' }
+    return { color: '#8B2500', emoji: '🥩', label: 'Meat' }
   if (c.includes('chicken') || c.includes('poultry'))
-    return { color: '#DAA520', emoji: '🍗', label: '닭고기' }
+    return { color: '#DAA520', emoji: '🍗', label: 'Chicken' }
   if (c.includes('mexican') || c.includes('american'))
-    return { color: '#FF4500', emoji: '🌮', label: '양식' }
+    return { color: '#FF4500', emoji: '🌮', label: 'Western' }
   if (c.includes('indian') || c.includes('thai') || c.includes('chinese'))
-    return { color: '#FF8C00', emoji: '🍛', label: '아시안' }
+    return { color: '#FF8C00', emoji: '🍛', label: 'Asian' }
   if (c.includes('breakfast') || c.includes('brunch'))
-    return { color: '#FFD700', emoji: '🍳', label: '브런치' }
-  return { color: '#FF6B35', emoji: '🍽️', label: '요리' }
+    return { color: '#FFD700', emoji: '🍳', label: 'Brunch' }
+  return { color: '#FF6B35', emoji: '🍽️', label: 'Dish' }
 }
 
 // 끓는 냄비 Canvas 애니메이션
@@ -61,7 +61,7 @@ function CookingAnimation({ color }: { color: string }) {
     canvas.height = canvas.offsetHeight
     const W = canvas.width, H = canvas.height
 
-    // 거품 파티클
+    // Bubble particles
     const bubbles: { x: number; y: number; r: number; vy: number; phase: number; alpha: number }[] = []
     for (let i = 0; i < 40; i++) {
       bubbles.push({
@@ -74,7 +74,7 @@ function CookingAnimation({ color }: { color: string }) {
       })
     }
 
-    // 스팀 파티클
+    // Steam particles
     const steams: { x: number; y: number; vy: number; vx: number; alpha: number; r: number }[] = []
     for (let i = 0; i < 20; i++) {
       steams.push({
@@ -93,14 +93,14 @@ function CookingAnimation({ color }: { color: string }) {
     const draw = () => {
       ctx.clearRect(0, 0, W, H)
 
-      // 배경
+      // Background
       const bg = ctx.createLinearGradient(0, 0, 0, H)
       bg.addColorStop(0, '#0a1628')
       bg.addColorStop(1, '#0d2244')
       ctx.fillStyle = bg
       ctx.fillRect(0, 0, W, H)
 
-      // 국물 표면 (물결)
+      // Liquid surface (wave)
       const surfaceY = H * 0.55
       ctx.beginPath()
       ctx.moveTo(0, surfaceY)
@@ -117,7 +117,7 @@ function CookingAnimation({ color }: { color: string }) {
       ctx.fillStyle = liquidGrad
       ctx.fill()
 
-      // 거품
+      // Bubbles
       bubbles.forEach(b => {
         b.y -= b.vy
         b.x += Math.sin(frame * 0.05 + b.phase) * 0.5
@@ -134,7 +134,7 @@ function CookingAnimation({ color }: { color: string }) {
         ctx.globalAlpha = 1
       })
 
-      // 스팀
+      // Steam
       steams.forEach(s => {
         s.y -= s.vy
         s.x += s.vx
@@ -189,17 +189,17 @@ export default function CookingResultModal({ result, noMatch, onClose }: Props) 
         {noMatch && !result ? (
           <div className="text-center py-8">
             <div className="text-5xl mb-4">🤷</div>
-            <h2 className="text-white text-xl font-bold mb-2">레시피 없음</h2>
-            <p className="text-gray-400 text-sm">이 재료 조합으로 만들 수 있는 레시피를 찾지 못했어요.</p>
+            <h2 className="text-white text-xl font-bold mb-2">No Recipe Found</h2>
+            <p className="text-gray-400 text-sm">No recipe found for this combination of ingredients.</p>
           </div>
         ) : result && style ? (
           <>
-            {/* 애니메이션 */}
+            {/* Animation */}
             <div className="rounded-xl overflow-hidden mb-4 bg-gray-950">
               <CookingAnimation color={style.color} />
             </div>
 
-            {/* 요리 썸네일 + 정보 */}
+            {/* Recipe thumbnail + info */}
             <div className="flex items-start gap-4 mb-4">
               {result.thumbnail && (
                 <img
@@ -224,18 +224,18 @@ export default function CookingResultModal({ result, noMatch, onClose }: Props) 
                 </div>
                 <h2 className="text-white text-xl font-black leading-tight">{result.name}</h2>
                 <div className="flex items-center gap-3 mt-1 text-xs text-gray-400">
-                  {result.ready_in_minutes && <span>⏱ {result.ready_in_minutes}분</span>}
-                  {result.servings && <span>👤 {result.servings}인분</span>}
+                  {result.ready_in_minutes && <span>⏱ {result.ready_in_minutes} min</span>}
+                  {result.servings && <span>👤 {result.servings} servings</span>}
                 </div>
               </div>
             </div>
 
-            {/* 재료 매칭 현황 */}
+            {/* Ingredient match status */}
             <div className="bg-gray-800 rounded-xl p-3 mb-3">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-gray-400 font-medium">재료 매칭</span>
+                <span className="text-xs text-gray-400 font-medium">Ingredient Match</span>
                 <span className="text-xs font-bold" style={{ color: style.color }}>
-                  {result.matched_count} / {result.total_selected} 일치
+                  {result.matched_count} / {result.total_selected} matched
                 </span>
               </div>
               <div className="w-full bg-gray-700 rounded-full h-1.5">
@@ -249,17 +249,17 @@ export default function CookingResultModal({ result, noMatch, onClose }: Props) 
               </div>
               {result.missing_count > 0 && (
                 <p className="text-xs text-gray-500 mt-1.5">
-                  {result.missing_count}가지 재료가 더 필요해요
+                  {result.missing_count} more ingredient{result.missing_count > 1 ? 's' : ''} needed
                 </p>
               )}
             </div>
 
-            {/* 전체 재료 토글 */}
+            {/* Full ingredient toggle */}
             <button
               onClick={() => setShowIngredients(v => !v)}
               className="w-full text-left text-xs text-gray-400 hover:text-white transition-colors flex items-center justify-between"
             >
-              <span>전체 재료 보기 ({result.ingredients.length}가지)</span>
+              <span>View all ingredients ({result.ingredients.length})</span>
               <span>{showIngredients ? '▲' : '▼'}</span>
             </button>
             {showIngredients && (

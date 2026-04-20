@@ -100,11 +100,11 @@ export default function PeriodicTable({ selected, onSelect }: Props) {
       {/* Legend */}
       <div className="mt-3 flex flex-wrap gap-2 text-[10px] text-gray-400 min-w-[900px]">
         {Object.entries({
-          'alkali-metal': '알칼리금속', 'alkaline-earth': '알칼리토금속',
-          'transition': '전이금속', 'post-transition': '후전이금속',
-          'metalloid': '준금속', 'nonmetal': '비금속',
-          'halogen': '할로겐', 'noble-gas': '비활성기체',
-          'lanthanide': '란타넘족', 'actinide': '악티늄족',
+          'alkali-metal': 'Alkali Metal', 'alkaline-earth': 'Alkaline Earth',
+          'transition': 'Transition', 'post-transition': 'Post-transition',
+          'metalloid': 'Metalloid', 'nonmetal': 'Nonmetal',
+          'halogen': 'Halogen', 'noble-gas': 'Noble Gas',
+          'lanthanide': 'Lanthanide', 'actinide': 'Actinide',
         }).map(([key, label]) => (
           <div key={key} className="flex items-center gap-1">
             <div className="w-3 h-3 rounded" style={{ backgroundColor: CATEGORY_COLORS[key] }} />

@@ -66,10 +66,10 @@ export default function CookingPage() {
     <main className="min-h-screen bg-gray-950 text-white">
       <div className="max-w-3xl mx-auto px-4 py-8 flex flex-col gap-8">
 
-        {/* 검색 */}
+        {/* Search */}
         <section>
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">
-            재료 검색
+            Search Ingredients
           </h2>
           <div className="relative">
             <div className="flex items-center gap-2 bg-gray-900 border border-gray-700 rounded-2xl px-4 py-3 focus-within:border-orange-500 transition-colors">
@@ -82,22 +82,21 @@ export default function CookingPage() {
                 onKeyDown={e => {
                   if (e.key === 'Enter' && suggestions.length > 0) addIngredient(suggestions[0])
                 }}
-                placeholder="재료를 검색하세요 (예: 달걀, Chicken...)"
+                placeholder="Search ingredients (e.g. Chicken, Garlic, Tomatoes...)"
                 className="flex-1 bg-transparent text-white placeholder-gray-500 outline-none text-sm"
               />
             </div>
 
-            {/* 자동완성 드롭다운 */}
+            {/* Autocomplete dropdown */}
             {suggestions.length > 0 && query && (
               <ul className="absolute top-full left-0 right-0 mt-1 bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden z-20 shadow-xl">
                 {suggestions.map(s => (
                   <li key={s.en}>
                     <button
                       onClick={() => addIngredient(s)}
-                      className="w-full text-left px-4 py-2.5 hover:bg-gray-700 transition-colors text-sm flex items-center justify-between"
+                      className="w-full text-left px-4 py-2.5 hover:bg-gray-700 transition-colors text-sm"
                     >
-                      <span className="text-white">{s.ko}</span>
-                      <span className="text-gray-500 text-xs">{s.en}</span>
+                      <span className="text-white">{s.en}</span>
                     </button>
                   </li>
                 ))}
@@ -106,12 +105,12 @@ export default function CookingPage() {
           </div>
         </section>
 
-        {/* 선택된 재료 + Mix It */}
+        {/* Selected ingredients + Mix It */}
         <section className="bg-gray-900 border border-gray-700 rounded-2xl p-5 flex flex-col gap-4">
-          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-widest">선택한 재료</h2>
+          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-widest">Selected Ingredients</h2>
 
           {selected.length === 0 ? (
-            <p className="text-gray-600 text-sm text-center py-3">재료를 검색하거나 아래에서 선택하세요</p>
+            <p className="text-gray-600 text-sm text-center py-3">Search or pick ingredients below</p>
           ) : (
             <div className="flex flex-wrap gap-2">
               {selected.map(ing => (
@@ -119,8 +118,7 @@ export default function CookingPage() {
                   key={ing.en}
                   className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-orange-900/30 border border-orange-700/40 text-sm"
                 >
-                  <span className="text-white font-medium">{ing.ko}</span>
-                  <span className="text-gray-500 text-xs">{ing.en}</span>
+                  <span className="text-white font-medium">{ing.en}</span>
                   <button
                     onClick={() => removeIngredient(ing.en)}
                     className="text-gray-500 hover:text-red-400 transition-colors ml-1"
@@ -147,20 +145,20 @@ export default function CookingPage() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
                 </svg>
-                레시피 찾는 중...
+                Finding recipe...
               </span>
             ) : 'MIX IT 🍳'}
           </button>
         </section>
 
-        {/* 인기 재료 */}
+        {/* Popular ingredients */}
         <section className="flex flex-col gap-5">
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-widest">
-            인기 재료
+            Popular Ingredients
           </h2>
           {POPULAR_INGREDIENTS.map(cat => (
             <div key={cat.category}>
-              <p className="text-xs text-gray-500 mb-2">{cat.emoji} {cat.category}</p>
+              <p className="text-xs text-gray-500 mb-2">{cat.emoji} {cat.categoryEn}</p>
               <div className="flex flex-wrap gap-2">
                 {cat.items.map(ing => {
                   const isSelected = selected.some(s => s.en === ing.en)
@@ -174,7 +172,7 @@ export default function CookingPage() {
                           : 'bg-gray-800 border-gray-700 text-gray-300 hover:border-orange-600 hover:text-white'
                       }`}
                     >
-                      {ing.ko}
+                      {ing.en}
                     </button>
                   )
                 })}

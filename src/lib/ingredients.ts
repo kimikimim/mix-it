@@ -4,9 +4,10 @@ export interface Ingredient {
 }
 
 // 인기 재료 (카테고리별)
-export const POPULAR_INGREDIENTS: { category: string; emoji: string; items: Ingredient[] }[] = [
+export const POPULAR_INGREDIENTS: { category: string; categoryEn: string; emoji: string; items: Ingredient[] }[] = [
   {
     category: '육류',
+    categoryEn: 'Meat',
     emoji: '🥩',
     items: [
       { ko: '닭고기', en: 'Chicken' },
@@ -19,6 +20,7 @@ export const POPULAR_INGREDIENTS: { category: string; emoji: string; items: Ingr
   },
   {
     category: '해산물',
+    categoryEn: 'Seafood',
     emoji: '🐟',
     items: [
       { ko: '연어', en: 'Salmon' },
@@ -31,6 +33,7 @@ export const POPULAR_INGREDIENTS: { category: string; emoji: string; items: Ingr
   },
   {
     category: '채소',
+    categoryEn: 'Vegetables',
     emoji: '🥦',
     items: [
       { ko: '양파', en: 'Onion' },
@@ -47,6 +50,7 @@ export const POPULAR_INGREDIENTS: { category: string; emoji: string; items: Ingr
   },
   {
     category: '유제품·달걀',
+    categoryEn: 'Dairy & Eggs',
     emoji: '🧀',
     items: [
       { ko: '달걀', en: 'Eggs' },
@@ -60,6 +64,7 @@ export const POPULAR_INGREDIENTS: { category: string; emoji: string; items: Ingr
   },
   {
     category: '곡물·면',
+    categoryEn: 'Grains & Pasta',
     emoji: '🍝',
     items: [
       { ko: '파스타', en: 'Pasta' },
@@ -71,6 +76,7 @@ export const POPULAR_INGREDIENTS: { category: string; emoji: string; items: Ingr
   },
   {
     category: '소스·양념',
+    categoryEn: 'Sauces & Condiments',
     emoji: '🫙',
     items: [
       { ko: '토마토 소스', en: 'Passata' },
@@ -85,6 +91,7 @@ export const POPULAR_INGREDIENTS: { category: string; emoji: string; items: Ingr
   },
   {
     category: '향신료·허브',
+    categoryEn: 'Spices & Herbs',
     emoji: '🌿',
     items: [
       { ko: '소금', en: 'Salt' },
@@ -101,6 +108,7 @@ export const POPULAR_INGREDIENTS: { category: string; emoji: string; items: Ingr
   },
   {
     category: '베이킹',
+    categoryEn: 'Baking',
     emoji: '🧁',
     items: [
       { ko: '설탕', en: 'Sugar' },

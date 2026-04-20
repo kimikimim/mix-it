@@ -14,10 +14,10 @@ interface Props {
 export default function SelectedPanel({ selected, onQuantityChange, onRemove, onMix, loading }: Props) {
   return (
     <div className="bg-gray-900 border border-gray-700 rounded-2xl p-5 flex flex-col gap-4">
-      <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-widest">선택한 원소</h2>
+      <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-widest">Selected Elements</h2>
 
       {selected.length === 0 ? (
-        <p className="text-gray-600 text-sm text-center py-4">주기율표에서 원소를 선택하세요 (최대 3개)</p>
+        <p className="text-gray-600 text-sm text-center py-4">Select elements from the periodic table (max 6)</p>
       ) : (
         <div className="flex flex-wrap gap-3">
           {selected.map(({ symbol, quantity }) => {
@@ -82,7 +82,7 @@ export default function SelectedPanel({ selected, onQuantityChange, onRemove, on
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
             </svg>
-            반응 중...
+            Reacting...
           </span>
         ) : 'MIX IT ⚗️'}
       </button>

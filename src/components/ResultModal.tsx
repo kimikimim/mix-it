@@ -11,13 +11,13 @@ interface Props {
 }
 
 const REACTION_LABELS: Record<string, { label: string; icon: string }> = {
-  precipitation: { label: '침전 반응', icon: '🧪' },
-  gas:           { label: '기체 발생', icon: '💨' },
-  explosion:     { label: '폭발 반응', icon: '💥' },
-  combustion:    { label: '연소 반응', icon: '🔥' },
-  dissolution:   { label: '용해 반응', icon: '💧' },
-  color_change:  { label: '색 변화',   icon: '🌈' },
-  none:          { label: '반응 없음', icon: '😶' },
+  precipitation: { label: 'Precipitation', icon: '🧪' },
+  gas:           { label: 'Gas Evolution', icon: '💨' },
+  explosion:     { label: 'Explosion',     icon: '💥' },
+  combustion:    { label: 'Combustion',    icon: '🔥' },
+  dissolution:   { label: 'Dissolution',  icon: '💧' },
+  color_change:  { label: 'Color Change', icon: '🌈' },
+  none:          { label: 'No Reaction',  icon: '😶' },
 }
 
 export default function ResultModal({ reaction, noMatch, onClose }: Props) {
@@ -58,8 +58,8 @@ export default function ResultModal({ reaction, noMatch, onClose }: Props) {
         {noMatch && !reaction ? (
           <div className="text-center py-8">
             <div className="text-5xl mb-4">🤷</div>
-            <h2 className="text-white text-xl font-bold mb-2">반응 없음</h2>
-            <p className="text-gray-400 text-sm">이 조합은 알려진 반응이 없어요.</p>
+            <h2 className="text-white text-xl font-bold mb-2">No Reaction</h2>
+            <p className="text-gray-400 text-sm">No known reaction for this combination.</p>
           </div>
         ) : reaction ? (
           <>
@@ -101,7 +101,7 @@ export default function ResultModal({ reaction, noMatch, onClose }: Props) {
                 className="w-8 h-8 rounded-full border-2 border-gray-700 flex-shrink-0"
                 style={{ backgroundColor: reaction.color }}
               />
-              <span className="text-gray-400 text-sm">반응 색상: <span className="font-mono text-gray-300">{reaction.color}</span></span>
+              <span className="text-gray-400 text-sm">Color: <span className="font-mono text-gray-300">{reaction.color}</span></span>
             </div>
           </>
         ) : null}
